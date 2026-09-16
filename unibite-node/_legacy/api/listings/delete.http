@@ -1,0 +1,29 @@
+### UniBite — Test: POST /api/listings/delete
+### Run #1 first; the HTTP Client keeps the session cookie for the rest.
+
+### 1) Login
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "dimitris",
+  "password": "unibite2025"
+}
+
+### 2) Delete listing #1 (expect success)
+POST http://localhost/unibite/api/listings/delete.php
+Content-Type: application/x-www-form-urlencoded
+
+listing_id=1
+
+### 3) Delete #1 again (expect 409 Already deleted)
+POST http://localhost/unibite/api/listings/delete.php
+Content-Type: application/x-www-form-urlencoded
+
+listing_id=1
+
+### 4) Delete a non-existent listing (expect 404 Listing not found)
+POST http://localhost/unibite/api/listings/delete.php
+Content-Type: application/x-www-form-urlencoded
+
+listing_id=99999

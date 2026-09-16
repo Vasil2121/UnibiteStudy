@@ -1,0 +1,19 @@
+### 1. Login as Maria (Maria will act as the Consumer)
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "maria",
+  "password": "unibite2025"
+}
+
+###
+
+### 2. Submit Portion Request (Change listing_id to test existing active entries)
+POST http://localhost/unibite/api/requests/send.php
+Content-Type: application/json
+
+{
+  "listing_id": 1,
+  "slot": 1
+}

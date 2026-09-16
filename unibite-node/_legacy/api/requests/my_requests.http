@@ -1,0 +1,14 @@
+### 1. Login as Maria (The Consumer who just made a reservation)
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "maria",
+  "password": "unibite2025"
+}
+
+###
+
+### 2. Fetch Maria's Request History List
+GET http://localhost/unibite/api/requests/my_requests.php
+Content-Type: application/json

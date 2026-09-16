@@ -1,0 +1,64 @@
+### 1. Login as the Cook (Giannis)
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "giannis",
+  "password": "unibite2025"
+}
+
+###
+
+### 2. Update Existing Listing (Multipart Form Data)
+POST http://localhost/unibite/api/listings/edit.php
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="id"
+
+1
+--WebAppBoundary
+Content-Disposition: form-data; name="title"
+
+Μακαρόνια με Κιμά (Τροποποιημένο)
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Φρεσκομαγειρεμένα μακαρόνια με πλούσια σάλτσα από μοσχαρίσιο κιμά και μυρωδικά.
+--WebAppBoundary
+Content-Disposition: form-data; name="portions_total"
+
+4
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_lat"
+
+38.2462
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_lng"
+
+21.7348
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_location_text"
+
+Φοιτητική Εστία - Κτίριο Α
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_time_from"
+
+2026-06-15 13:00:00
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_time_to"
+
+2026-06-15 17:00:00
+--WebAppBoundary
+Content-Disposition: form-data; name="status"
+
+active
+--WebAppBoundary
+Content-Disposition: form-data; name="allergens[]"
+
+1
+--WebAppBoundary
+Content-Disposition: form-data; name="allergens[]"
+
+2
+--WebAppBoundary--

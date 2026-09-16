@@ -1,0 +1,14 @@
+### UniBite — Test: GET /api/listings/mine
+### Run #1 first; the HTTP Client keeps the session cookie for #2.
+
+### 1) Login
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "dimitris",
+  "password": "unibite2025"
+}
+
+### 2) Get my listings (uses the cookie from #1)
+GET http://localhost/unibite/api/listings/mine.php

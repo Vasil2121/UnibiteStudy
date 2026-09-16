@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Διαθέσιμα Γεύματα — UniBite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/header-footer.css">
+    <link rel="stylesheet" href="/css/consumer-feed.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="site-main">
+
+    <div class="feed-container">
+        <h1 class="feed-container__title">Διαθέσιμα Γεύματα στην Κοινότητα</h1>
+
+        <div class="card feed-filters">
+
+            <div class="feed-filters__search">
+                <input class="form-input" type="text" id="address-search-input"
+                       placeholder="Πληκτρολόγησε τη διεύθυνσή σου (π.χ. Κορίνθου 200, Πάτρα)">
+                <button type="button" class="btn-primary" id="address-search-btn">🔎 Εύρεση</button>
+            </div>
+
+            <div class="feed-filters__row">
+                <div class="feed-filters__field">
+                    <label class="form-label" for="filter-distance">Μέγ. απόσταση (km)</label>
+                    <input class="form-input" type="number" id="filter-distance" min="0.1" step="0.1" value="5">
+                </div>
+
+                <div class="feed-filters__field">
+                    <label class="form-label" for="filter-limit">Μέγ. αποτελέσματα</label>
+                    <input class="form-input" type="number" id="filter-limit" min="1" step="1" value="20">
+                </div>
+
+                <button type="button" class="btn-primary" id="filter-apply">Εφαρμογή φίλτρου</button>
+                <button type="button" class="btn-secondary" id="filter-reset">Όλες οι αγγελίες</button>
+            </div>
+
+            <p class="feed-filters__status" id="filter-status">
+                Πληκτρολόγησε τη διεύθυνσή σου και πάτησε «Εύρεση», ή κάνε κλικ στον χάρτη.
+            </p>
+        </div>
+
+        <div id="map" class="feed-container__map"></div>
+
+        <div id="listings-grid" class="listings-grid">
+            <div class="listings-grid__loading">Φόρτωση διαθέσιμων γευμάτων...</div>
+        </div>
+    </div>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="/js/pages/consumer-feed.js"></script>
+</body>
+</html>

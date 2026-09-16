@@ -1,0 +1,41 @@
+### UniBite — Test: POST /api/requests/approve  +  /api/requests/reject
+### Run #1 first; the HTTP Client keeps the session cookie for the rest.
+###
+### PREP: you need pending requests in the DB. In phpMyAdmin (db unibite, SQL),
+### insert two, using one of YOUR active listings and another user as consumer:
+###   INSERT INTO requests (listing_id, consumer_id, slot, status)
+###   VALUES (2, 3, 1, 'pending'), (2, 3, 2, 'pending');
+### Then check their ids in the `requests` table and put them below.
+
+### 1) Login
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "dimitris",
+  "password": "unibite2025"
+}
+
+### 2) Approve request #1 (expect success; listing's portions_available drops by 1)
+POST http://localhost/unibite/api/requests/approve.php
+Content-Type: application/x-www-form-urlencoded
+
+request_id=1
+
+### 3) Reject request #2 (expect success + refunded:true; consumer gets +1 point)
+POST http://localhost/unibite/api/requests/reject.php
+Content-Type: application/x-www-form-urlencoded
+
+request_id=2
+
+### 4) Approve #1 again (expect 409 Request is not pending)
+POST http://localhost/unibite/api/requests/approve.php
+Content-Type: application/x-www-form-urlencoded
+
+request_id=1
+
+### 5) Approve a non-existent request (expect 404 Request not found)
+POST http://localhost/unibite/api/requests/approve.php
+Content-Type: application/x-www-form-urlencoded
+
+request_id=99999

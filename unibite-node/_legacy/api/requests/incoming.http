@@ -1,0 +1,18 @@
+### UniBite — Test: GET /api/requests/incoming
+### Run #1 first; the HTTP Client keeps the session cookie for #2.
+###
+### NOTE: there are no requests yet (Member B builds the consumer side).
+### To see real data, first insert a test request in phpMyAdmin — see the
+### chat message for the exact INSERT statement.
+
+### 1) Login
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "dimitris",
+  "password": "unibite2025"
+}
+
+### 2) Incoming requests for my listings
+GET http://localhost/unibite/api/requests/incoming.php

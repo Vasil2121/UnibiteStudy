@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Τα Αιτήματά μου — UniBite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/header-footer.css">
+    <link rel="stylesheet" href="/css/consumer-requests.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="site-main">
+
+    <div class="requests-container">
+        <h1 class="requests-container__title">Ιστορικό Αιτήμάτων & Κρατήσεων</h1>
+
+        <div id="requests-wrapper" class="requests-wrapper">
+            <div class="requests-wrapper__loading">Φόρτωση του ιστορικού κρατήσεων...</div>
+        </div>
+    </div>
+
+    <div id="rating-modal" class="modal" style="display: none;">
+        <div class="modal__content">
+            <span class="modal__close-btn">&times;</span>
+            <h2 class="modal__title">Αξιολόγηση Γεύματος</h2>
+            <p class="modal__subtitle">Πώς σας φάνηκε το φαγητό του συμφοιτητή σας;</p>
+
+            <form id="rating-form" class="rating-form">
+                <input type="hidden" id="modal-request-id" value="">
+
+                <div class="rating-form__stars">
+                    <span class="star-node" data-value="1">★</span>
+                    <span class="star-node" data-value="2">★</span>
+                    <span class="star-node" data-value="3">★</span>
+                    <span class="star-node" data-value="4">★</span>
+                    <span class="star-node" data-value="5">★</span>
+                </div>
+                <input type="hidden" id="rating-score-value" value="0">
+
+                <div class="rating-form__field-group">
+                    <label for="rating-comment" class="rating-form__label">Σχόλια / Εντυπώσεις (Προαιρετικό):</label>
+                    <textarea id="rating-comment" class="rating-form__textarea" placeholder="π.χ. Ήταν πεντανόστιμο και στην ώρα του!"></textarea>
+                </div>
+
+                <button type="submit" id="rating-submit-btn" class="rating-form__submit-btn" disabled>Υποβολή Βαθμολογίας</button>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script src="/js/layout.js"></script>
+<script src="/js/myRequests.js"></script>
+</body>
+</html>

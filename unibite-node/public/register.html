@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Εγγραφή — UniBite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/header-footer.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="site-main">
+
+<div class="container">
+
+    <section class="card">
+
+        <h1>Εγγραφή στο UniBite</h1>
+        <p>Δημιούργησε λογαριασμό για να ξεκινήσεις να μοιράζεσαι φαγητό με συμφοιτητές σου.</p>
+
+        <div id="form-alert" class="alert-error" hidden></div>
+
+        <form id="register-form">
+
+            <div>
+                <label class="form-label" for="full_name">Ονοματεπώνυμο</label>
+                <input
+                    class="form-input"
+                    type="text"
+                    id="full_name"
+                    name="full_name"
+                    required
+                    minlength="2"
+                    maxlength="100"
+                    autocomplete="name"
+                >
+                <small class="form-error" data-error-for="fullName"></small>
+            </div>
+
+            <div>
+                <label class="form-label" for="username">Username</label>
+                <input
+                    class="form-input"
+                    type="text"
+                    id="username"
+                    name="username"
+                    required
+                    minlength="3"
+                    maxlength="50"
+                    pattern="[a-zA-Z0-9_]+"
+                    autocomplete="username"
+                >
+                <small class="form-error" data-error-for="username"></small>
+            </div>
+
+            <div>
+                <label class="form-label" for="email">Email</label>
+                <input
+                    class="form-input"
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    maxlength="100"
+                    autocomplete="email"
+                >
+                <small class="form-error" data-error-for="email"></small>
+            </div>
+
+            <div>
+                <label class="form-label" for="password">Κωδικός</label>
+                <input
+                    class="form-input"
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    minlength="8"
+                    maxlength="255"
+                    autocomplete="new-password"
+                >
+                <small class="form-error" data-error-for="password"></small>
+            </div>
+
+            <div>
+                <label class="form-label" for="password_confirm">Επιβεβαίωση Κωδικού</label>
+                <input
+                    class="form-input"
+                    type="password"
+                    id="password_confirm"
+                    name="password_confirm"
+                    required
+                    minlength="8"
+                    maxlength="255"
+                    autocomplete="new-password"
+                >
+                <small class="form-error" data-error-for="password_confirm"></small>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submit-btn">
+                Εγγραφή
+            </button>
+
+        </form>
+
+        <p>
+            Έχεις ήδη λογαριασμό; <a href="/login.html">Σύνδεση εδώ</a>
+        </p>
+
+    </section>
+</div>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script src="/js/layout.js"></script>
+<script src="/js/register.js"></script>
+</body>
+</html>

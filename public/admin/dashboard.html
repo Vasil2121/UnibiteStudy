@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Διαχειριστικό Πάνελ — UniBite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/header-footer.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="site-main">
+
+<div class="container" style="padding-top: var(--space-xl); padding-bottom: var(--space-2xl);">
+
+    <div style="margin-bottom: var(--space-lg);">
+        <h1 style="font-size: var(--text-2xl); margin-bottom: var(--space-xs);">
+            📊 Στατιστικά Πλατφόρμας UniBite
+        </h1>
+        <p style="color: var(--color-text-muted); margin: 0;">
+            Στατιστικά των <strong>τελευταίων 30 ημερών</strong>.
+            Καλώς ήρθες, <span id="dashboard-username"></span>.
+        </p>
+    </div>
+
+    <div class="alert-error is-hidden" id="dashboard-alert" role="alert"></div>
+
+    <div id="dashboard-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-xl);">
+        Φόρτωση...
+    </div>
+
+    <div class="card">
+        <h2 style="font-size: var(--text-lg); margin-bottom: var(--space-md);">
+            🔗 Ενέργειες Διαχείρισης
+        </h2>
+        <a href="/admin/leaderboard.html" class="btn-primary">
+            🏆 Πίνακες Κατάταξης
+        </a>
+    </div>
+
+</div>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="/js/pages/admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<?php
+require_once __DIR__ . '/../../includes/db.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+require_once __DIR__ . '/../../includes/auth.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    jsonResponse(['success' => false, 'error' => 'Method not allowed'], 405);
+}
+
+requireLoginApi();
+$cookId = getCurrentUserId();
+
+$requestId = filter_var($_POST['request_id'] ?? null, FILTER_VALIDATE_INT, [
+    'options' => ['min_range' => 1],
+]);
+if ($requestId === false) {
+    jsonResponse(['success' => false, 'error' => 'Invalid request id'], 400);
+}
+
+$stmt = $conn->prepare(
+    "SELECT r.status, r.consumer_id, l.cook_id
+       FROM requests r
+       JOIN listings l ON l.id = r.listing_id
+      WHERE r.id = ?"
+);
+$stmt->bind_param('i', $requestId);
+$stmt->execute();
+$row = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$row) {
+    jsonResponse(['success' => false, 'error' => 'Request not found'], 404);
+}
+if ((int) $row['cook_id'] !== $cookId) {
+    jsonResponse(['success' => false, 'error' => 'Not your request'], 403);
+}
+if ($row['status'] !== 'pending') {
+    jsonResponse(['success' => false, 'error' => 'Request is not pending'], 409);
+}
+
+$stmt = $conn->prepare(
+    "UPDATE requests SET status = 'rejected', decided_at = NOW() WHERE id = ? AND status = 'pending'"
+);
+$stmt->bind_param('i', $requestId);
+$stmt->execute();
+$affected = $stmt->affected_rows;
+$stmt->close();
+
+if ($affected !== 1) {
+    jsonResponse(['success' => false, 'error' => 'Request is no longer pending'], 409);
+}
+
+$consumerId = (int) $row['consumer_id'];
+$refunded = addPoints($consumerId, 1, 'request_refunded', $requestId);
+
+if (!$refunded) {
+    jsonResponse(['success' => false, 'error' => 'Rejected, but point refund failed'], 500);
+}
+
+jsonResponse(['success' => true, 'request_id' => $requestId, 'status' => 'rejected', 'refunded' => true]);

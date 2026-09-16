@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniBite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/common.css">
+</head>
+<body>
+
+<div class="container">
+    <p>Φόρτωση...</p>
+</div>
+
+<script>
+    (async () => {
+        try {
+            const response = await fetch('/api/auth/me', {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            window.location.replace(response.ok ? '/consumer/feed.html' : '/login.html');
+
+        } catch (error) {
+            window.location.replace('/login.html');
+        }
+    })();
+</script>
+</body>
+</html>

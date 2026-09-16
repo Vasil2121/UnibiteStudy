@@ -1,0 +1,128 @@
+### UniBite — Test: POST /api/listings/create
+### Run the requests top-to-bottom. The IntelliJ HTTP Client keeps the session
+### cookie from request #1 and sends it automatically to #2 and #3.
+
+### 1) Login first (sets the PHPSESSID cookie)
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "dimitris",
+  "password": "unibite2025"
+}
+
+### 2) Create a listing WITHOUT a photo (the common case)
+POST http://localhost/unibite/api/listings/create.php
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="title"
+
+Φασολάδα της γιαγιάς
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Χορτοφαγική, μόλις μαγειρεμένη.
+--WebAppBoundary
+Content-Disposition: form-data; name="portions"
+
+4
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_location_text"
+
+Κτίριο Β, Πανεπιστήμιο Πατρών
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_lat"
+
+38.2880
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_lng"
+
+21.7890
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_time_from"
+
+2026-06-04T12:00
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_time_to"
+
+2026-06-04T15:00
+--WebAppBoundary
+Content-Disposition: form-data; name="allergen_ids[]"
+
+1
+--WebAppBoundary
+Content-Disposition: form-data; name="allergen_ids[]"
+
+7
+--WebAppBoundary--
+
+### 3) (optional) Create a listing WITH a photo
+### Point the "< path" line to a real image on your machine before running.
+POST http://localhost/unibite/api/listings/create.php
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="title"
+
+Μουσακάς
+--WebAppBoundary
+Content-Disposition: form-data; name="portions"
+
+6
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_location_text"
+
+Εστία 3, δωμάτιο 210
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_lat"
+
+38.2900
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_lng"
+
+21.7900
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_time_from"
+
+2026-06-04T18:00
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_time_to"
+
+2026-06-04T20:00
+--WebAppBoundary
+Content-Disposition: form-data; name="photo"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< C:\Users\YourUser\Pictures\test.jpg
+--WebAppBoundary--
+
+### 4) Negative test: missing title + bad portions => expect 400 with fields{}
+POST http://localhost/unibite/api/listings/create.php
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="portions"
+
+0
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_location_text"
+
+Κάπου
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_lat"
+
+38.29
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_lng"
+
+21.79
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_time_from"
+
+2026-06-04T18:00
+--WebAppBoundary
+Content-Disposition: form-data; name="pickup_time_to"
+
+2026-06-04T17:00
+--WebAppBoundary--

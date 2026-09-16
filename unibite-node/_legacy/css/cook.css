@@ -1,0 +1,250 @@
+.cook-form {
+    max-width: var(--container-md);
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+}
+
+.cook-form__title {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-xs);
+}
+
+.cook-form__subtitle {
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-lg);
+}
+
+.cook-form__group {
+    margin-bottom: var(--space-lg);
+}
+
+.cook-form__group--row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+}
+
+@media (min-width: 768px) {
+    .cook-form__group--row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.cook-form__allergens {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+}
+
+@media (min-width: 768px) {
+    .cook-form__allergens {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.cook-allergen {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.cook-allergen:hover {
+    border-color: var(--color-border-strong);
+}
+
+.cook-allergen:has(input:checked) {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary);
+}
+
+.cook-allergen__label {
+    font-size: var(--text-sm);
+}
+
+.cook-form__map {
+    width: 100%;
+    height: 300px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.cook-form__map-hint {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: var(--space-xs) 0 0;
+}
+
+.cook-form__map-hint--set {
+    color: var(--color-success);
+    font-weight: var(--weight-medium);
+}
+
+.cook-form__photo-preview {
+    display: block;
+    max-width: 200px;
+    margin-top: var(--space-sm);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.cook-listings {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-2xl);
+}
+
+.cook-listings__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.cook-listings__title {
+    font-size: var(--text-2xl);
+}
+
+.cook-listings__state {
+    color: var(--color-text-muted);
+    padding: var(--space-lg) 0;
+}
+
+.cook-listings__group {
+    margin-bottom: var(--space-xl);
+}
+
+.cook-listings__group-title {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-md);
+}
+
+.cook-listings__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+}
+
+@media (min-width: 768px) {
+    .cook-listings__grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.cook-card {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.cook-card__photo {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.cook-card__body {
+    padding: var(--space-lg);
+}
+
+.cook-card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.cook-card__title {
+    font-size: var(--text-lg);
+}
+
+.cook-card__desc {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin: 0 0 var(--space-sm);
+}
+
+.cook-card__meta {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    margin: var(--space-xs) 0;
+}
+
+.cook-card__actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.cook-badge {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    white-space: nowrap;
+}
+
+.cook-badge--active {
+    background-color: var(--color-success-light);
+    color: var(--color-success);
+}
+
+.cook-badge--inactive {
+    background-color: var(--color-warning-light);
+    color: var(--color-warning);
+}
+
+.cook-badge--deleted {
+    background-color: var(--color-error-light);
+    color: var(--color-error);
+}
+
+.cook-badge--pending {
+    background-color: var(--color-warning-light);
+    color: var(--color-warning);
+}
+
+.cook-badge--approved {
+    background-color: var(--color-success-light);
+    color: var(--color-success);
+}
+
+.cook-badge--pickedup {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.cook-badge--noshow {
+    background-color: var(--color-error-light);
+    color: var(--color-error);
+}
+
+.cook-badge--rejected {
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-muted);
+}
+
+.cook-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+}
+
+.cook-chip {
+    font-size: var(--text-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    color: var(--color-text-muted);
+}

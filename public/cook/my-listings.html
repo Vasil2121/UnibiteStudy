@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Οι Αγγελίες μου — UniBite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/header-footer.css">
+    <link rel="stylesheet" href="/css/cook.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="site-main">
+
+<div class="container cook-listings">
+
+    <div class="cook-listings__header">
+        <h1 class="cook-listings__title">Οι Αγγελίες μου</h1>
+        <a class="btn-primary" href="/cook/create.html">+ Νέα αγγελία</a>
+    </div>
+
+    <div class="alert-error is-hidden" id="listings-alert" role="alert"></div>
+
+    <div class="cook-listings__state" id="listings-loading">Φόρτωση...</div>
+
+    <div class="cook-listings__state is-hidden" id="listings-empty">
+        Δεν έχεις αγγελίες ακόμη. Πάτα «Νέα αγγελία» για να φτιάξεις την πρώτη σου!
+    </div>
+
+    <div id="listings-root"></div>
+
+</div>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="/js/pages/cook-my-listings.js"></script>
+</body>
+</html>

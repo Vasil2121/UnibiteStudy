@@ -1,0 +1,20 @@
+### 1. Login as Consumer (Maria)
+POST http://localhost/unibite/api/auth/login.php
+Content-Type: application/json
+
+{
+  "identifier": "maria",
+  "password": "unibite2025"
+}
+
+###
+
+### 2. Submit Rating (Will return 400 until status becomes 'picked_up')
+POST http://localhost/unibite/api/ratings/submit.php
+Content-Type: application/json
+
+{
+  "request_id": 1,
+  "score": 5,
+  "comment": "Εξαιρετικό φαγητό, ευχαριστώ πολύ!"
+}

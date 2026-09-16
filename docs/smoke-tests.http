@@ -1,0 +1,1037 @@
+@host = http://localhost:3000
+@password = test1234
+
+GET {{host}}/api/health
+
+> {%
+    client.test("health returns 200 and connected", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.db === "connected");
+    });
+%}
+
+###
+
+GET {{host}}/api/does-not-exist
+
+> {%
+    client.test("unknown api path returns 404", function () {
+        client.assert(response.status === 404);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{bad json
+
+> {%
+    client.test("malformed json returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/logout
+
+> {%
+    client.test("logout without session returns 200", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+GET {{host}}/api/auth/me
+
+> {%
+    client.test("me without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+GET {{host}}/api/listings
+
+> {%
+    client.test("feed without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+GET {{host}}/api/listings/mine
+
+> {%
+    client.test("my listings without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+POST {{host}}/api/requests
+Content-Type: application/json
+
+{"listingId": 1, "slot": 1}
+
+> {%
+    client.test("create request without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+GET {{host}}/api/requests/mine
+
+> {%
+    client.test("my requests without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+GET {{host}}/api/requests/incoming
+
+> {%
+    client.test("incoming requests without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+PATCH {{host}}/api/requests/1
+Content-Type: application/json
+
+{"status": "approved"}
+
+> {%
+    client.test("request transition without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+POST {{host}}/api/ratings
+Content-Type: application/json
+
+{"requestId": 1, "score": 5}
+
+> {%
+    client.test("rating without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+GET {{host}}/api/profile/transactions
+
+> {%
+    client.test("transactions without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+GET {{host}}/api/admin/stats
+
+> {%
+    client.test("admin stats without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+GET {{host}}/api/admin/leaderboard
+
+> {%
+    client.test("leaderboard without session returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+GET {{host}}/api/allergens
+
+> {%
+    client.test("allergens are public and return fourteen entries", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.length === 14);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{"username": "ab", "email": "not-an-email", "password": "1", "fullName": ""}
+
+> {%
+    client.test("invalid registration returns 400 with fields", function () {
+        client.assert(response.status === 400);
+        client.assert(response.body.fields.username !== undefined);
+        client.assert(response.body.fields.email !== undefined);
+        client.assert(response.body.fields.password !== undefined);
+        client.assert(response.body.fields.fullName !== undefined);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{"username": "smokeconsumer{{$timestamp}}", "email": "smokeconsumer{{$timestamp}}@test.gr", "password": "{{password}}", "fullName": "Smoke Consumer"}
+
+> {%
+    client.test("consumer registration returns 201 with 5 points", function () {
+        client.assert(response.status === 201);
+        client.assert(response.body.user.points === 5);
+    });
+    client.global.set("consumerUsername", response.body.user.username);
+%}
+
+###
+
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{"username": "smokecook{{$timestamp}}", "email": "smokecook{{$timestamp}}@test.gr", "password": "{{password}}", "fullName": "Smoke Cook"}
+
+> {%
+    client.test("cook registration returns 201", function () {
+        client.assert(response.status === 201);
+    });
+    client.global.set("cookUsername", response.body.user.username);
+%}
+
+###
+
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{"username": "{{cookUsername}}", "email": "another{{$timestamp}}@test.gr", "password": "{{password}}", "fullName": "Duplicate"}
+
+> {%
+    client.test("duplicate username returns 409", function () {
+        client.assert(response.status === 409);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{"identifier": "", "password": ""}
+
+> {%
+    client.test("empty login returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{"identifier": "{{cookUsername}}", "password": "wrong-password"}
+
+> {%
+    client.test("wrong password returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{"identifier": "{{cookUsername}}", "password": "{{password}}"}
+
+> {%
+    client.test("cook login returns 200", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+GET {{host}}/api/auth/me
+
+> {%
+    client.test("me returns the cook", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.username === client.global.get("cookUsername"));
+    });
+%}
+
+###
+
+GET {{host}}/api/admin/stats
+
+> {%
+    client.test("admin stats for non-admin returns 403", function () {
+        client.assert(response.status === 403);
+    });
+%}
+
+###
+
+GET {{host}}/api/admin/leaderboard
+
+> {%
+    client.test("leaderboard for non-admin returns 403", function () {
+        client.assert(response.status === 403);
+    });
+%}
+
+###
+
+POST {{host}}/api/listings
+Content-Type: multipart/form-data; boundary=SmokeBoundary
+
+--SmokeBoundary
+Content-Disposition: form-data; name="title"
+
+ab
+--SmokeBoundary
+Content-Disposition: form-data; name="portions"
+
+0
+--SmokeBoundary--
+
+> {%
+    client.test("invalid listing returns 400 with fields", function () {
+        client.assert(response.status === 400);
+        client.assert(response.body.fields.title !== undefined);
+        client.assert(response.body.fields.portions !== undefined);
+    });
+%}
+
+###
+
+POST {{host}}/api/listings
+Content-Type: multipart/form-data; boundary=SmokeBoundary
+
+--SmokeBoundary
+Content-Disposition: form-data; name="title"
+
+Smoke listing
+--SmokeBoundary
+Content-Disposition: form-data; name="photo"; filename="animation.gif"
+Content-Type: image/gif
+
+GIF89a
+--SmokeBoundary--
+
+> {%
+    client.test("gif photo returns 400 on the photo field", function () {
+        client.assert(response.status === 400);
+        client.assert(response.body.fields.photo !== undefined);
+    });
+%}
+
+###
+
+POST {{host}}/api/listings
+Content-Type: multipart/form-data; boundary=SmokeBoundary
+
+--SmokeBoundary
+Content-Disposition: form-data; name="title"
+
+Smoke listing
+--SmokeBoundary
+Content-Disposition: form-data; name="description"
+
+Created by the smoke tests
+--SmokeBoundary
+Content-Disposition: form-data; name="portions"
+
+2
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_location_text"
+
+Smoke point
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_lat"
+
+38.2880
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_lng"
+
+21.7890
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_time_from"
+
+2030-01-01T18:00
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_time_to"
+
+2030-01-01T21:00
+--SmokeBoundary
+Content-Disposition: form-data; name="allergen_ids"
+
+1
+--SmokeBoundary
+Content-Disposition: form-data; name="allergen_ids"
+
+7
+--SmokeBoundary--
+
+> {%
+    client.test("valid listing returns 201", function () {
+        client.assert(response.status === 201);
+    });
+    client.global.set("listingId", response.body.listing_id);
+%}
+
+###
+
+GET {{host}}/api/listings/{{listingId}}
+
+> {%
+    client.test("listing detail returns 200 with two allergens", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.listing.allergens.length === 2);
+    });
+%}
+
+###
+
+GET {{host}}/api/listings/abc
+
+> {%
+    client.test("listing with invalid id returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+GET {{host}}/api/listings/99999999
+
+> {%
+    client.test("missing listing returns 404", function () {
+        client.assert(response.status === 404);
+    });
+%}
+
+###
+
+GET {{host}}/api/listings/mine
+
+> {%
+    client.test("my listings contains the new listing", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.listings.length >= 1);
+    });
+%}
+
+###
+
+GET {{host}}/api/listings?lat=abc&lng=21.7
+
+> {%
+    client.test("feed with invalid latitude returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+POST {{host}}/api/requests
+Content-Type: application/json
+
+{"listingId": {{listingId}}, "slot": 1}
+
+> {%
+    client.test("requesting own listing returns 409", function () {
+        client.assert(response.status === 409);
+    });
+%}
+
+###
+
+PUT {{host}}/api/listings/abc
+Content-Type: multipart/form-data; boundary=SmokeBoundary
+
+--SmokeBoundary
+Content-Disposition: form-data; name="title"
+
+Smoke listing
+--SmokeBoundary--
+
+> {%
+    client.test("edit with invalid id returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+PUT {{host}}/api/listings/99999999
+Content-Type: multipart/form-data; boundary=SmokeBoundary
+
+--SmokeBoundary
+Content-Disposition: form-data; name="title"
+
+Smoke listing
+--SmokeBoundary--
+
+> {%
+    client.test("edit of missing listing returns 404", function () {
+        client.assert(response.status === 404);
+    });
+%}
+
+###
+
+PUT {{host}}/api/listings/{{listingId}}
+Content-Type: multipart/form-data; boundary=SmokeBoundary
+
+--SmokeBoundary
+Content-Disposition: form-data; name="title"
+
+Smoke listing edited
+--SmokeBoundary
+Content-Disposition: form-data; name="description"
+
+Edited by the smoke tests
+--SmokeBoundary
+Content-Disposition: form-data; name="portions"
+
+2
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_location_text"
+
+Smoke point
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_lat"
+
+38.2880
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_lng"
+
+21.7890
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_time_from"
+
+2030-01-01T18:00
+--SmokeBoundary
+Content-Disposition: form-data; name="pickup_time_to"
+
+2030-01-01T21:00
+--SmokeBoundary
+Content-Disposition: form-data; name="allergen_ids"
+
+1
+--SmokeBoundary
+Content-Disposition: form-data; name="allergen_ids"
+
+7
+--SmokeBoundary--
+
+> {%
+    client.test("edit of own listing returns 200", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{"identifier": "{{consumerUsername}}", "password": "{{password}}"}
+
+> {%
+    client.test("consumer login returns 200", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+GET {{host}}/api/listings
+
+> {%
+    client.test("feed returns 200 for the consumer", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+GET {{host}}/api/listings?lat=38.2880&lng=21.7890&radius=5&limit=20
+
+> {%
+    client.test("nearby feed returns distances", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.listings.length >= 1);
+        client.assert(response.body.listings[0].distance_km !== undefined);
+    });
+%}
+
+###
+
+PUT {{host}}/api/listings/{{listingId}}
+Content-Type: multipart/form-data; boundary=SmokeBoundary
+
+--SmokeBoundary
+Content-Disposition: form-data; name="title"
+
+Not mine
+--SmokeBoundary--
+
+> {%
+    client.test("edit of another user's listing returns 403", function () {
+        client.assert(response.status === 403);
+    });
+%}
+
+###
+
+POST {{host}}/api/requests
+Content-Type: application/json
+
+{"listingId": "x", "slot": 1}
+
+> {%
+    client.test("request with invalid listing id returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+POST {{host}}/api/requests
+Content-Type: application/json
+
+{"listingId": {{listingId}}, "slot": 3}
+
+> {%
+    client.test("request with invalid slot returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+POST {{host}}/api/requests
+Content-Type: application/json
+
+{"listingId": 99999999, "slot": 1}
+
+> {%
+    client.test("request for missing listing returns 404", function () {
+        client.assert(response.status === 404);
+    });
+%}
+
+###
+
+POST {{host}}/api/requests
+Content-Type: application/json
+
+{"listingId": {{listingId}}, "slot": 1}
+
+> {%
+    client.test("request returns 201", function () {
+        client.assert(response.status === 201);
+    });
+    client.global.set("requestId", response.body.request_id);
+%}
+
+###
+
+POST {{host}}/api/requests
+Content-Type: application/json
+
+{"listingId": {{listingId}}, "slot": 1}
+
+> {%
+    client.test("duplicate slot returns 409", function () {
+        client.assert(response.status === 409);
+    });
+%}
+
+###
+
+PATCH {{host}}/api/requests/{{requestId}}
+Content-Type: application/json
+
+{"status": "approved"}
+
+> {%
+    client.test("consumer cannot approve, returns 403", function () {
+        client.assert(response.status === 403);
+    });
+%}
+
+###
+
+POST {{host}}/api/ratings
+Content-Type: application/json
+
+{"requestId": {{requestId}}, "score": 5}
+
+> {%
+    client.test("rating before pickup returns 409", function () {
+        client.assert(response.status === 409);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{"identifier": "{{cookUsername}}", "password": "{{password}}"}
+
+###
+
+GET {{host}}/api/requests/incoming
+
+> {%
+    client.test("incoming requests contain the pending request", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.requests[0].status === "pending");
+    });
+%}
+
+###
+
+PATCH {{host}}/api/requests/abc
+Content-Type: application/json
+
+{"status": "approved"}
+
+> {%
+    client.test("transition with invalid id returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+PATCH {{host}}/api/requests/{{requestId}}
+Content-Type: application/json
+
+{"status": "bogus"}
+
+> {%
+    client.test("transition to unknown status returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+PATCH {{host}}/api/requests/99999999
+Content-Type: application/json
+
+{"status": "approved"}
+
+> {%
+    client.test("transition of missing request returns 404", function () {
+        client.assert(response.status === 404);
+    });
+%}
+
+###
+
+PATCH {{host}}/api/requests/{{requestId}}
+Content-Type: application/json
+
+{"status": "approved"}
+
+> {%
+    client.test("approve returns 200", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.status === "approved");
+    });
+%}
+
+###
+
+PATCH {{host}}/api/requests/{{requestId}}
+Content-Type: application/json
+
+{"status": "approved"}
+
+> {%
+    client.test("approving twice returns 409", function () {
+        client.assert(response.status === 409);
+    });
+%}
+
+###
+
+PUT {{host}}/api/listings/{{listingId}}
+Content-Type: multipart/form-data; boundary=SmokeBoundary
+
+--SmokeBoundary
+Content-Disposition: form-data; name="title"
+
+Smoke listing
+--SmokeBoundary--
+
+> {%
+    client.test("edit with an approved request returns 409", function () {
+        client.assert(response.status === 409);
+    });
+%}
+
+###
+
+PATCH {{host}}/api/requests/{{requestId}}
+Content-Type: application/json
+
+{"status": "picked_up"}
+
+> {%
+    client.test("pickup returns 200", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.status === "picked_up");
+    });
+%}
+
+###
+
+POST {{host}}/api/ratings
+Content-Type: application/json
+
+{"requestId": {{requestId}}, "score": 5}
+
+> {%
+    client.test("cook cannot rate own pickup, returns 403", function () {
+        client.assert(response.status === 403);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{"identifier": "{{consumerUsername}}", "password": "{{password}}"}
+
+###
+
+POST {{host}}/api/ratings
+Content-Type: application/json
+
+{"requestId": {{requestId}}, "score": 9}
+
+> {%
+    client.test("rating with invalid score returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+POST {{host}}/api/ratings
+Content-Type: application/json
+
+{"requestId": 99999999, "score": 5}
+
+> {%
+    client.test("rating of missing request returns 404", function () {
+        client.assert(response.status === 404);
+    });
+%}
+
+###
+
+POST {{host}}/api/ratings
+Content-Type: application/json
+
+{"requestId": {{requestId}}, "score": 5, "comment": "Smoke test rating"}
+
+> {%
+    client.test("rating returns 201 and pays the cook two points", function () {
+        client.assert(response.status === 201);
+        client.assert(response.body.cook_points_awarded === 2);
+    });
+%}
+
+###
+
+POST {{host}}/api/ratings
+Content-Type: application/json
+
+{"requestId": {{requestId}}, "score": 4}
+
+> {%
+    client.test("rating twice returns 409", function () {
+        client.assert(response.status === 409);
+    });
+%}
+
+###
+
+GET {{host}}/api/requests/mine
+
+> {%
+    client.test("my requests shows the request as rated", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.requests[0].is_rated === true);
+    });
+%}
+
+###
+
+GET {{host}}/api/profile/transactions
+
+> {%
+    client.test("consumer ledger has the bonus and the spent point", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.transactions.length === 2);
+    });
+%}
+
+###
+
+GET {{host}}/api/auth/me
+
+> {%
+    client.test("consumer has 4 points after one request", function () {
+        client.assert(response.body.points === 4);
+    });
+%}
+
+###
+
+DELETE {{host}}/api/listings/{{listingId}}
+
+> {%
+    client.test("delete of another user's listing returns 403", function () {
+        client.assert(response.status === 403);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{"identifier": "{{cookUsername}}", "password": "{{password}}"}
+
+###
+
+GET {{host}}/api/auth/me
+
+> {%
+    client.test("cook has 7 points after a high rating", function () {
+        client.assert(response.body.points === 7);
+    });
+%}
+
+###
+
+DELETE {{host}}/api/listings/abc
+
+> {%
+    client.test("delete with invalid id returns 400", function () {
+        client.assert(response.status === 400);
+    });
+%}
+
+###
+
+DELETE {{host}}/api/listings/99999999
+
+> {%
+    client.test("delete of missing listing returns 404", function () {
+        client.assert(response.status === 404);
+    });
+%}
+
+###
+
+DELETE {{host}}/api/listings/{{listingId}}
+
+> {%
+    client.test("delete returns 200", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+DELETE {{host}}/api/listings/{{listingId}}
+
+> {%
+    client.test("deleting twice returns 409", function () {
+        client.assert(response.status === 409);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{"identifier": "admin", "password": "{{password}}"}
+
+###
+
+GET {{host}}/api/admin/stats
+
+> {%
+    client.test("admin stats returns 200", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.period === "last_30_days");
+    });
+%}
+
+###
+
+GET {{host}}/api/admin/leaderboard
+
+> {%
+    client.test("leaderboard returns 200 with three lists", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.topDonors !== undefined);
+        client.assert(response.body.topRated !== undefined);
+        client.assert(response.body.recentComments !== undefined);
+    });
+%}
+
+###
+
+POST {{host}}/api/auth/logout
+
+> {%
+    client.test("logout returns 200", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+GET {{host}}/api/auth/me
+
+> {%
+    client.test("me after logout returns 401", function () {
+        client.assert(response.status === 401);
+    });
+%}
